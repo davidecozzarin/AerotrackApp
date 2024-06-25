@@ -1,20 +1,37 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import React from 'react';
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
+import LoginScreen from './screens/LoginScreen';
+import ResultScreen from './screens/ResultScreen';
+import MainTabs from './navigation/MainTabs';
+import RegisterScreen from './screens/RegisterScreen';
+import { FavouriteProvider } from './context/FavouriteContext';
+import { AuthProvider } from './context/AuthContext';
+import 'react-native-gesture-handler';
 
-export default function App() {
+const Stack = createStackNavigator();
+
+/**
+ * App component that sets up the navigation container and stack navigator.
+ * It also wraps the navigation with AuthProvider and FavouriteProvider 
+ * to provide authentication and favorite management context to the app.
+ */
+const App = () => {
+  
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <NavigationContainer>
+      <AuthProvider>
+        <FavouriteProvider>
+          <Stack.Navigator initialRouteName="Login">
+            <Stack.Screen name="Login" component={LoginScreen} options={{ headerShown: false }} />
+            <Stack.Screen name="MainTabs" component={MainTabs} options={{ headerShown: false, gestureEnabled: false }} />
+            <Stack.Screen name="ResultScreen" component={ResultScreen} options={{ headerShown: false }} />
+            <Stack.Screen name="Register" component={RegisterScreen} options={{ headerShown: false}}  />
+          </Stack.Navigator>
+        </FavouriteProvider>
+      </AuthProvider>
+    </NavigationContainer>
   );
-}
+};
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+export default App;
